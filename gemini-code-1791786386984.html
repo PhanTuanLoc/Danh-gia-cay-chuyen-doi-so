@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang web đánh giá "Cây chuyển đổi số" | Khối 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0052cc;
+            --dark-blue: #0747a6;
+            --light-blue: #e3f2fd;
+            --hover-blue: #deebff;
+            --bg-color: #f4f7fb;
+            --card-bg: #ffffff;
+            --text-main: #172b4d;
+            --text-sub: #5e6c84;
+            --star-color: #ffab00;
+            --border-color: #dfe1e6;
+            --danger-red: #de350b;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 28px 24px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-top: 6px solid var(--primary-blue);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .school-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .grade-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            text-transform: uppercase;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .question-group {
+            margin-bottom: 24px;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: var(--dark-blue);
+            line-height: 1.4;
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-blue);
+            background-color: var(--hover-blue);
+        }
+
+        .checkbox-item input {
+            margin-right: 12px;
+            margin-top: 3px;
+            accent-color: var(--primary-blue);
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item span {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Star Rating Styles */
+        .rating-box {
+            text-align: center;
+            background: #fafbfc;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            flex-direction: row-reverse;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .rating-stars input {
+            display: none;
+        }
+
+        .rating-stars label {
+            font-size: 38px;
+            color: #dfe1e6;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .rating-stars input:checked ~ label,
+        .rating-stars label:hover,
+        .rating-stars label:hover ~ label {
+            color: var(--star-color);
+        }
+
+        .rating-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            min-height: 20px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.92;
+        }
+
+        .btn-view-results {
+            width: 100%;
+            background: #f4f5f7;
+            color: var(--dark-blue);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn-view-results:hover {
+            background: var(--hover-blue);
+        }
+
+        #success-msg {
+            display: none;
+            text-align: center;
+            color: #078750;
+            font-weight: 700;
+            padding: 20px 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 30, 66, 0.54);
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 550px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-sub);
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .password-box {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            margin: 12px 0;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .btn-confirm {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .error-text {
+            color: var(--danger-red);
+            font-size: 13px;
+            margin-top: 6px;
+            display: none;
+        }
+
+        /* Results List */
+        .results-header {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            margin-bottom: 16px;
+            text-align: center;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 8px;
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-card {
+            background: #fafbfc;
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+        }
+
+        .result-time {
+            color: var(--text-sub);
+            font-size: 12px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .result-stars {
+            color: var(--star-color);
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .result-answers {
+            margin: 0;
+            padding-left: 18px;
+            color: var(--text-main);
+        }
+
+        .btn-reset {
+            background: #ffebe6;
+            color: var(--danger-red);
+            border: 1px solid #ffbdad;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: #ffbdad;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="school-title">Trường Tiểu học Châu Văn Liêm</div>
+        <div class="grade-title">Khối 4</div>
+        <h1 class="main-title">Trang web đánh giá "Cây chuyển đổi số"</h1>
+    </div>
+
+    <form id="evaluationForm">
+        <!-- Câu hỏi 1 -->
+        <div class="question-group">
+            <div class="question-title">Câu 1: Theo bạn, mô hình "Cây Chuyển Đổi Số" của Tổ 4 có những điểm sáng nào ấn tượng nhất? <i>(Chọn nhiều đáp án)</i></div>
+            <div class="checkbox-list">
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Ý tưởng trực quan & Sáng tạo">
+                    <span><strong>1. Ý tưởng trực quan & Sáng tạo:</strong> Hình ảnh "Cây" vật thể treo mã QR sinh động, gắn kết giữa nét truyền thống và công nghệ số.</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Tra cứu thuận tiện">
+                    <span><strong>2. Tra cứu thuận tiện:</strong> Các mã QR bố trí rõ ràng, dễ quét bằng điện thoại/máy tính bảng.</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Nội dung giáo dục hữu ích">
+                    <span><strong>3. Nội dung giáo dục hữu ích:</strong> Liên kết nhanh đến các tiết dạy mẫu, bài học điện tử và tư liệu tuyên truyền chất lượng.</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Tính ứng dụng & Mở rộng cao">
+                    <span><strong>4. Tính ứng dụng & Mở rộng cao:</strong> Dễ dàng cập nhật, bổ sung thêm nhiều mã QR và nội dung học tập mới.</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Truyền cảm hứng học tập số">
+                    <span><strong>5. Truyền cảm hứng học tập số:</strong> Tạo sự tò mò, kích thích người xem và học sinh chủ động khám phá tri thức.</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" name="q1" value="Hiệu quả tuyên truyền tốt">
+                    <span><strong>6. Hiệu quả tuyên truyền tốt:</strong> Truyền tải thông điệp chuyển đổi số ngành giáo dục một cách gần gũi, thiết thực đến mọi người.</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Câu hỏi 2 -->
+        <div class="question-group">
+            <div class="question-title">Câu 2: Tổng quan trải nghiệm của bạn về sản phẩm "Cây Chuyển Đổi Số" hôm nay thế nào?</div>
+            <div class="rating-box">
+                <div class="rating-stars">
+                    <input type="radio" id="star5" name="q2" value="5" onchange="updateStarText(5)"><label for="star5">★</label>
+                    <input type="radio" id="star4" name="q2" value="4" onchange="updateStarText(4)"><label for="star4">★</label>
+                    <input type="radio" id="star3" name="q2" value="3" onchange="updateStarText(3)"><label for="star3">★</label>
+                    <input type="radio" id="star2" name="q2" value="2" onchange="updateStarText(2)"><label for="star2">★</label>
+                    <input type="radio" id="star1" name="q2" value="1" onchange="updateStarText(1)"><label for="star1">★</label>
+                </div>
+                <div class="rating-text" id="ratingDesc">Hãy chọn số sao đánh giá</div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">GỬI ĐÁNH GIÁ</button>
+    </form>
+
+    <div id="success-msg">
+        🎉 Cảm ơn bạn đã gửi đánh giá cho sản phẩm "Cây Chuyển Đổi Số"!<br>
+        Chúc bạn có những trải nghiệm thật ý nghĩa tại Ngày hội Công dân số!
+    </div>
+
+    <button type="button" class="btn-view-results" onclick="openAuthModal()">Xem kết quả đánh giá gần đây</button>
+</div>
+
+<!-- Modal Nhập mật khẩu & Xem kết quả -->
+<div id="resultModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        
+        <!-- Màn hình 1: Yêu cầu mật khẩu -->
+        <div id="authSection" class="password-box">
+            <h3 style="margin-top: 0; color: var(--dark-blue);">XÁC NHẬN QUYỀN TRUY CẬP</h3>
+            <p style="font-size: 14px; color: var(--text-sub);">Hãy nhập mật khẩu để xem danh sách kết quả đánh giá gần đây:</p>
+            <input type="password" id="passwordInput" class="password-input" placeholder="Nhập mật khẩu..." onkeypress="handleKeyPress(event)">
+            <button class="btn-confirm" onclick="verifyPassword()">XÁC NHẬN</button>
+            <div id="errorText" class="error-text">Mật khẩu không đúng. Vui lòng thử lại!</div>
+        </div>
+
+        <!-- Màn hình 2: Danh sách kết quả -->
+        <div id="dataSection" style="display: none;">
+            <div class="results-header">KẾT QUẢ ĐÁNH GIÁ GẦN ĐÂY</div>
+            <div id="resultsContainer" class="results-list"></div>
+            <button type="button" class="btn-reset" onclick="clearResults()">Làm mới kết quả (Xóa tất cả)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const starMap = {
+        1: "1★: Cần cải thiện nhiều",
+        2: "2★: Tạm ổn",
+        3: "3★: Khá tốt",
+        4: "4★: Rất ấn tượng",
+        5: "5★: Tuyệt vời / Xuất sắc"
+    };
+
+    function updateStarText(val) {
+        document.getElementById('ratingDesc').innerText = starMap[val];
+    }
+
+    // Xử lý nộp Form
+    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const selectedQ1 = Array.from(document.querySelectorAll('input[name="q1"]:checked')).map(cb => cb.value);
+        const selectedQ2 = document.querySelector('input[name="q2"]:checked');
+
+        if (selectedQ1.length === 0) {
+            alert("Vui lòng chọn ít nhất 1 đáp án cho Câu 1!");
+            return;
+        }
+        if (!selectedQ2) {
+            alert("Vui lòng chọn số sao đánh giá cho Câu 2!");
+            return;
+        }
+
+        const newEntry = {
+            time: new Date().toLocaleString('vi-VN'),
+            q1: selectedQ1,
+            q2: selectedQ2.value
+        };
+
+        // Lưu vào LocalStorage
+        let storageData = JSON.parse(localStorage.getItem('cvl_evaluations') || '[]');
+        storageData.unshift(newEntry);
+        localStorage.setItem('cvl_evaluations', JSON.stringify(storageData));
+
+        // Ẩn form, hiện thông báo cảm ơn
+        document.getElementById('evaluationForm').style.display = 'none';
+        document.getElementById('success-msg').style.display = 'block';
+    });
+
+    // Quản lý Modal & Bảo mật
+    function openAuthModal() {
+        document.getElementById('resultModal').style.display = 'flex';
+        document.getElementById('authSection').style.display = 'block';
+        document.getElementById('dataSection').style.display = 'none';
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('errorText').style.display = 'none';
+    }
+
+    function closeModal() {
+        document.getElementById('resultModal').style.display = 'none';
+    }
+
+    function handleKeyPress(e) {
+        if (e.key === 'Enter') {
+            verifyPassword();
+        }
+    }
+
+    function verifyPassword() {
+        const input = document.getElementById('passwordInput').value;
+        if (input === 'k4cvl') {
+            document.getElementById('authSection').style.display = 'none';
+            document.getElementById('dataSection').style.display = 'block';
+            renderResults();
+        } else {
+            document.getElementById('errorText').style.display = 'block';
+        }
+    }
+
+    // Hiển thị danh sách đánh giá
+    function renderResults() {
+        const container = document.getElementById('resultsContainer');
+        const storageData = JSON.parse(localStorage.getItem('cvl_evaluations') || '[]');
+
+        if (storageData.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color: var(--text-sub); padding: 20px;">Chưa có lượt đánh giá nào được ghi nhận.</div>';
+            return;
+        }
+
+        let html = '';
+        storageData.forEach((item, index) => {
+            const answersLi = item.q1.map(ans => `<li>${ans}</li>`).join('');
+            html += `
+                <div class="result-card">
+                    <div class="result-time">⏱ Thời gian: ${item.time}</div>
+                    <div class="result-stars">⭐ Đánh giá: ${starMap[item.q2]}</div>
+                    <div><strong>Điểm sáng đã chọn (Câu 1):</strong></div>
+                    <ul class="result-answers">${answersLi}</ul>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    // Làm mới (xóa) kết quả
+    function clearResults() {
+        if (confirm("Bạn có chắc chắn muốn xóa tất cả các lượt đánh giá đã lưu không?")) {
+            localStorage.removeItem('cvl_evaluations');
+            renderResults();
+        }
+    }
+</script>
+
+</body>
+</html>
